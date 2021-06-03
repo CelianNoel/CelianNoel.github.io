@@ -23,7 +23,7 @@ AFRAME.registerComponent('model-viewer', {
       this.onTouchMove = this.onTouchMove.bind(this);
       this.onTouchEnd = this.onTouchEnd.bind(this);
   
-      this.submitURLButtonClicked = this.submitURLButtonClicked.bind(this);
+      /*this.submitURLButtonClicked = this.submitURLButtonClicked.bind(this);*/
   
       this.changeGltfModel = this.changeGltfModel.bind(this);
 
@@ -73,7 +73,7 @@ AFRAME.registerComponent('model-viewer', {
   
     initUploadInput: function () {
       var uploadContainerEl = this.uploadContainerEl = document.createElement('div');
-      var inputEl = this.inputEl = document.createElement('input');
+      //var inputEl = this.inputEl = document.createElement('input');
       var submitButtonEl = this.submitButtonEl = document.createElement('button');
       var style = document.createElement('style');
       var css =
@@ -106,10 +106,10 @@ AFRAME.registerComponent('model-viewer', {
       document.getElementsByTagName('head')[0].appendChild(style);
   
       submitButtonEl.classList.add('a-upload-model-button');
-      submitButtonEl.innerHTML = 'OPEN MODEL';
+      submitButtonEl.innerHTML = 'Change color';
       submitButtonEl.addEventListener('click', this.changeGltfModel);
   
-      inputEl.classList.add('a-upload-model-input');
+      /*inputEl.classList.add('a-upload-model-input');
       inputEl.onfocus = function () {
         if (this.value !== inputDefaultValue) { return; }
         this.value = '';
@@ -117,7 +117,7 @@ AFRAME.registerComponent('model-viewer', {
       inputEl.onblur = function () {
         if (this.value) { return; }
         this.value = inputDefaultValue;
-      };
+      };*/
   
       this.el.sceneEl.addEventListener('infomessageopened', function () {
         uploadContainerEl.classList.add('hidden');
@@ -126,9 +126,9 @@ AFRAME.registerComponent('model-viewer', {
         uploadContainerEl.classList.remove('hidden');
       });
   
-      inputEl.value = inputDefaultValue;
+      //inputEl.value = inputDefaultValue;
   
-      uploadContainerEl.appendChild(inputEl);
+      //uploadContainerEl.appendChild(inputEl);
       uploadContainerEl.appendChild(submitButtonEl);
   
       this.el.sceneEl.appendChild(uploadContainerEl);
@@ -139,11 +139,11 @@ AFRAME.registerComponent('model-viewer', {
       this.modelEl.setAttribute('gltf-model', this.data.gltfModel);
     },
   
-    submitURLButtonClicked: function (evt) {
+    /*submitURLButtonClicked: function (evt) {
       var modelURL = this.inputEl.value;
       if (modelURL === this.inputDefaultValue) { return; }
       this.el.setAttribute('model-viewer', 'gltfModel', modelURL);
-    },
+    },*/
 
     //Change
     changeGltfModel: function (evt) {
