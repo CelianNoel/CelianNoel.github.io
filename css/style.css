@@ -1,0 +1,68 @@
+.aframebox {
+    height: 500px;
+    width: 500px;
+    }
+
+.general {
+    display: inline-flex;
+}
+
+.tabs {
+    background-color: brown;
+    height: 500px;
+}
+
+.viewer {
+    background-color: aqua;
+    height: 500px;
+}
+
+.score-general {
+    display: block;
+    text-align:center; 
+    font-family: "Tahoma";
+}
+
+.env-score-title {
+    color: #92d050;
+    font-size: 34px; 
+    font-weight: 300; 
+    padding-top: 50px;
+}
+
+.env-score {
+    color: #92d050;
+    font-size: 50px; 
+    font-weight: 600;
+    padding-top: 50px;
+}
+
+.score-details {
+    padding-top: 50px;
+}
+
+.logo {
+    width: 15px;
+    height: 15px;
+    border-radius: 90px;
+}
+
+td {
+    text-align: left;
+    padding-left: 20px;
+    padding-top: 12px;
+}
+
+.soc-score-title {
+    color: #00ccff;
+    font-size: 34px; 
+    font-weight: 300; 
+    padding-top: 50px;
+}
+
+.soc-score {
+    color: #00ccff;
+    font-size: 50px; 
+    font-weight: 600;
+    padding-top: 50px;
+}

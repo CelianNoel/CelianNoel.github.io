@@ -1,18 +1,15 @@
 
-
-function AdpatMaterial(model, modelpart, color) {
-  console.log(model);
-  console.log(modelpart);
-  console.log(color);
-}
-
-
 /* global AFRAME, THREE */
-AFRAME.registerComponent('model-viewer', {
+AFRAME.registerComponent('modelviewer', {
   schema: {
     gltfModel: {default: ''},
+    ScoreHtml:  {type: 'selector'},
     title: {default: ''},
-    uploadUIEnabled: {default: true}
+    uploadUIEnabled: {default: true},
+    outsideMat: {type: 'int', default: 1},
+    insideMat: {type: 'int', default: 1},
+    ornementsMat: {type: 'int', default: 1},
+    handleMat: {type: 'int', default: 1},
   },
   init: function () {
     var el = this.el;
@@ -79,53 +76,43 @@ AFRAME.registerComponent('model-viewer', {
   },
 
   initUploadInput: function () {
-
-    //test
-    /*let changeMaterial = (part, texture) => {
-      //console.log(this.modelEl.object3D);
-
-      this.modelEl.object3D.traverse(function(object3D){
-        
-        
-        var mat = object3D.material
-        
-        //if (mat) {
-          if (object3D.name == part){
-            //object3D.material = new THREE.MeshStandardMaterial({color: 0x000000});
-            
-            /*object3D.material.map = new THREE.ImageUtils.loadTexture("images/Cuir-black.jpg");
-            object3D.material.needsUpdate = true;
-            
-            const loader = new THREE.TextureLoader();
-            
-            const material = new THREE.MeshBasicMaterial({
-              map: loader.load(texture),
-            });
-            console.log(object3D.children[0]);
-            object3D.children[0].material = material;
-          }
-        //}
-      })
-    }*/
     
-    let changeMaterial = (part, texture) => {
-      //console.log(this.modelEl.object3D);
+    let changeMaterial = (part, value, texture) => {
+      
+      var envscore = document.querySelector('[envscore]').components.envscore;
+      //console.log(envscore);
+      envscore.updateScore(part, value);
+
+      //Udate the material in the schema 
+      if (part == "Outside")
+        this.data.outsideMat = value;
+      if (part == "Inside")
+        this.data.insideMat = value;
+      if (part == "Ornements")
+        this.data.ornementsMat = value;
+      if (part == "Hance1")
+        this.data.handleMat = value;
+      
+      
+
 
       this.modelEl.object3D.traverse(function(object3D){
         var target;
-
+        
         if (object3D.name == part){
           object3D.traverse(function(object3D){
             var mat = object3D.material
             if (mat) {
-            
+            //console.log(mat);
             const loader = new THREE.TextureLoader();
             
-            const material = new THREE.MeshBasicMaterial({
+            /*const material = new THREE.MeshBasicMaterial({
               map: loader.load(texture),
             });
-            //console.log(object3D.children[0]);
             object3D.material = material;
+            console.log(object3D.material);*/
+            object3D.material.map = loader.load(texture);
+
           }
         //}
           })
@@ -134,7 +121,10 @@ AFRAME.registerComponent('model-viewer', {
       
       })
     }
-
+    
+    var scoreContainer = this.scoreContainer = document.createElement('div');
+    scoreContainer.setAttribute('aframe-injected', '');
+    
     var uploadContainerEl = this.uploadContainerEl = document.createElement('div');
     //var inputEl = this.inputEl = document.createElement('input');
     
@@ -159,21 +149,25 @@ AFRAME.registerComponent('model-viewer', {
 
     var style = document.createElement('style');
     var css =
+      '.a-score  {box-sizing: border-box; display: inline-block; height: 34px; margin: 20px; width: 100%;' +
+      'position: absolute; color: white; background-color: red;' +
+      'font-size: 12px; line-height: 12px; border: none;' +
+      'border-radius: 5px}' +
       '.a-upload-model  {box-sizing: border-box; display: inline-block; height: 34px; padding: 0; width: 70%;' +
       'bottom: 20px; left: 15%; right: 15%; position: absolute; color: white;' +
       'font-size: 12px; line-height: 12px; border: none;' +
       'border-radius: 5px}' +
       '.a-text-color-change {display: inline-block; font-size: x-large; margin-right: 10px;}' +
       '.a-upload-model.hidden {display: none}' +
-      '.a-button-outside-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/beige.jpeg"); margin-right: 5px;}' +
-      '.a-button-outside-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Cuir-black.jpg");  margin-right: 5px;}' +
-      '.a-button-outside-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/brown.jpg");  margin-right: 50px;}' +
+      '.a-button-outside-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 5px;}' +
+      '.a-button-outside-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 5px;}' +
+      '.a-button-outside-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 50px;}' +
       '.a-button-ornements-gold {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/gold.jpg"); margin-right: 5px;}' +
       '.a-button-ornements-metalgrey {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/metalGrey.jpg");  margin-right: 5px;}' +
-      '.a-button-ornements-metalblack {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/metalBlack.jpg");  margin-right: 50px;}' +
-      '.a-button-handle-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/beige.jpeg"); margin-right: 5px;}' +
-      '.a-button-handle-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Cuir-black.jpg");  margin-right: 5px;}' +
-      '.a-button-handle-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/brown.jpg");  margin-right: 50px;}' +
+      '.a-button-ornements-metalblack {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 50px;}' +
+      '.a-button-handle-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 5px;}' +
+      '.a-button-handle-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 5px;}' +
+      '.a-button-handle-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 50px;}' +
       
       '.a-upload-model-button:hover {border-color: #ef2d5e; color: #ef2d5e}' +
       '.a-upload-model-input {color: #666; vertical-align: middle; padding: 0px 10px 0 10px; text-transform: uppercase; border: 0; width: 75%; height: 100%; border-radius: 10px; margin-right: 10px}' +
@@ -189,6 +183,10 @@ AFRAME.registerComponent('model-viewer', {
       '.a-upload-model-input {width: 60%;}}';
     }
 
+    //scoreContainer.classList.add('a-score');
+    //scoreContainer.innerText = "Score :";
+    //scoreContainer.innerText = this.data.ScoreHtml.data;
+
     uploadContainerEl.classList.add('a-upload-model');
     if (style.styleSheet) {
       style.styleSheet.cssText = css;
@@ -202,57 +200,49 @@ AFRAME.registerComponent('model-viewer', {
     outside.innerText = "Outside :";
 
     outisdeBeige.classList.add('a-button-outside-beige');
-    outisdeBeige.addEventListener('click', function(){changeMaterial("Outside","images/Outside/beige.jpeg");});
+    outisdeBeige.addEventListener('click', function() {changeMaterial("Outside", 1, "images/Outside/Texture_1_baseColor.jpeg");});
+    outisdeBeige.setAttribute('title', 'material1');
 
     outisdeBlack.classList.add('a-button-outside-black');
-    outisdeBlack.addEventListener('click', function(){changeMaterial("Outside","images/Outside/Cuir-black.jpg");});
+    outisdeBlack.addEventListener('click', function(){changeMaterial("Outside", 2, "images/Outside/full-black2.jpg");});
+    outisdeBlack.setAttribute('title', 'material2');
 
     outisdeBrown.classList.add('a-button-outside-brown');
-    outisdeBrown.addEventListener('click', function(){changeMaterial("Outside","images/Outside/brown.jpg");});
+    outisdeBrown.addEventListener('click', function(){changeMaterial("Outside", 3, "images/Outside/camel4.jpg");});
+    outisdeBrown.setAttribute('title', 'material3');
 
     //Ornements
     ornements.classList.add('a-text-color-change');
     ornements.innerText = "Ornements :";
 
     ornementsBeige.classList.add('a-button-ornements-gold');
-    ornementsBeige.addEventListener('click', function(){changeMaterial("Ornements","images/Ornements/gold.jpg");});
+    ornementsBeige.addEventListener('click', function(){changeMaterial("Ornements", 1,"images/Ornements/gold.jpg");});
+    ornementsBeige.setAttribute('title', 'material4');
 
     ornementsBlack.classList.add('a-button-ornements-metalgrey');
-    ornementsBlack.addEventListener('click', function(){changeMaterial("Ornements","images/Ornements/metalGrey.jpg");});
+    ornementsBlack.addEventListener('click', function(){changeMaterial("Ornements", 2, "images/Ornements/metalGrey.jpg");});
+    ornementsBlack.setAttribute('title', 'material5');
 
     ornementsBrown.classList.add('a-button-ornements-metalblack');
-    ornementsBrown.addEventListener('click', function(){changeMaterial("Ornements","images/Ornements/metalBlack.jpg");});
+    ornementsBrown.addEventListener('click', function(){changeMaterial("Ornements", 3, "images/Outside/full-black2.jpg");});
+    ornementsBrown.setAttribute('title', 'material6');
 
     //Handle
     handle.classList.add('a-text-color-change');
     handle.innerText = "Handle :";
 
     handle1.classList.add('a-button-outside-beige');
-    handle1.addEventListener('click', function(){changeMaterial("Hance1","images/Outside/beige.jpeg");});
+    handle1.addEventListener('click', function(){changeMaterial("Hance1", 1, "images/Outside/Texture_1_baseColor.jpeg");});
+    handle1.setAttribute('title', 'material1');
 
     handle2.classList.add('a-button-outside-black');
-    handle2.addEventListener('click', function(){changeMaterial("Hance1","images/Outside/Cuir-black.jpg");});
+    handle2.addEventListener('click', function(){changeMaterial("Hance1", 2, "images/Outside/full-black2.jpg");});
+    handle2.setAttribute('title', 'material2');
 
     handle3.classList.add('a-button-outside-brown');
-    handle3.addEventListener('click', function(){changeMaterial("Hance1","images/Outside/brown.jpg");});
-    
-    /*changeSphere.classList.add('a-upload-model-button');
-    changeSphere.innerHTML = 'Change Sphere';
-    changeSphere.addEventListener('click', function(){changeMaterial("Sphere","Beige");});
+    handle3.addEventListener('click', function(){changeMaterial("Hance1", 3, "images/Outside/camel4.jpg");});
+    handle3.setAttribute('title', 'material3');
 
-    changeCone.classList.add('a-upload-model-button');
-    changeCone.innerHTML = 'Change Cone';
-    changeCone.addEventListener('click', function(){changeMaterial("Cone","Beige");});*/
-
-    /*inputEl.classList.add('a-upload-model-input');
-    inputEl.onfocus = function () {
-      if (this.value !== inputDefaultValue) { return; }
-      this.value = '';
-    };
-    inputEl.onblur = function () {
-      if (this.value) { return; }
-      this.value = inputDefaultValue;
-    };*/
 
     this.el.sceneEl.addEventListener('infomessageopened', function () {
       uploadContainerEl.classList.add('hidden');
@@ -279,6 +269,7 @@ AFRAME.registerComponent('model-viewer', {
     //uploadContainerEl.appendChild(changeSphere);
     //uploadContainerEl.appendChild(changeCone);
 
+    //this.el.sceneEl.appendChild(scoreContainer);
     this.el.sceneEl.appendChild(uploadContainerEl);
   },
 
@@ -335,13 +326,14 @@ AFRAME.registerComponent('model-viewer', {
 
   initBackground: function () {
     var backgroundEl = this.backgroundEl = document.querySelector('a-entity');
-    backgroundEl.setAttribute('geometry', {primitive: 'sphere', radius: 65});
-    backgroundEl.setAttribute('material', {
+    //backgroundEl.setAttribute('geometry', {primitive: 'sphere', radius: 65});
+    /*backgroundEl.setAttribute('material', {
       shader: 'background-gradient',
       colorTop: '#37383c',
       colorBottom: '#757575',
       side: 'back'
-    });
+    });*/
+    //backgroundEl.setAttribute('material', 'images/background/Luxury-Backgrounds-4.jpg');
     backgroundEl.setAttribute('hide-on-enter-ar', '');
   },
 
@@ -431,7 +423,7 @@ AFRAME.registerComponent('model-viewer', {
       shadowCameraRight: 5,
       shadowCameraBottom: -5,
       shadowCameraTop: 5,
-      intensity: 0.5,
+      intensity: 1,
       target: 'modelPivot'
     });
 
