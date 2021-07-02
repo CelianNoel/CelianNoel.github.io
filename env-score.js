@@ -10,6 +10,8 @@ AFRAME.registerComponent('envscore', {
       var sceneEl = this.el.sceneEl;
       var messageEl = this.messageEl = document.createElement('div');
       var startOpened = this.data.startOpened;
+      var infoButton = this.infoButton = document.createElement('button');
+
       this.toggleInfoMessage = this.toggleInfoMessage.bind(this);
   
       messageEl.classList.add('a-score-pop-up');
@@ -81,6 +83,10 @@ AFRAME.registerComponent('envscore', {
       document.getElementsByTagName('head')[0].appendChild(style);
     },
   
+    closeEnvImpactPanel: function () {
+      this.messageEl.style.display = 'none';
+  },
+
     toggleInfoMessage: function () {
         var display = this.messageEl.style.display;
         var socScoreButton = document.querySelector('.a-soc-score-pop-up');
@@ -95,7 +101,7 @@ AFRAME.registerComponent('envscore', {
     },
   
     createScoresButton: function (onClick) {
-      var infoButton;
+      
       var wrapper;
   
       // Create elements.
@@ -116,13 +122,43 @@ AFRAME.registerComponent('envscore', {
       this.el.sceneEl.appendChild(wrapper);
     },
 
-    updateScore: function (part, value) {
-      this.data.totalScore = value;
-      //console.log(this.data.totalScore);
-      this.infoButton.innerText = " " + this.data.totalScore;
+    updateScore: function (id) {
 
       var score = document.querySelector('.env-score');
-      score.innerHTML = this.data.totalScore;
+      var airPollution = document.querySelector('.airPollution');
+      var ghg = document.querySelector('.ghg');
+      var landUse = document.querySelector('.landUse');
+      var waste = document.querySelector('.waste');
+      var waterConsumption = document.querySelector('.waterConsumption');
+      var waterPollution = document.querySelector('.waterPollution');
+
+      
+      var url = "https://serene-headland-54515.herokuapp.com/materials/"
+      fetch(url + id)
+        .then((resp) => resp.json())
+        .then(function(data) {
+          console.log(data);
+          this.infoButton.innerHTML = " " + data.environmentScore.total;
+          score.innerHTML = data.environmentScore.total;
+          airPollution.innerHTML = data.environmentScore.airPollution;
+          ghg.innerHTML = data.environmentScore.ghg;
+          landUse.innerHTML = data.environmentScore.landUse;
+          waste.innerHTML = data.environmentScore.waste;
+          waterConsumption.innerHTML = data.environmentScore.waterConsumption;
+          waterPollution.innerHTML = data.environmentScore.waterPollution;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+       /* const Http = new XMLHttpRequest();
+        var url='http://localhost:8080/materials/' + id;
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = (e) => {
+          var res = Http.responseText;
+        }*/
     },
   });
   

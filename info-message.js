@@ -5,6 +5,9 @@ AFRAME.registerComponent('info-message', {
       startOpened: {default: false}
     },
     init: function () {
+
+      console.log("message : ");
+
       var sceneEl = this.el.sceneEl;
       var messageEl = this.messageEl = document.createElement('div');
       var startOpened = this.data.startOpened;

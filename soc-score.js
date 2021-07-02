@@ -9,6 +9,7 @@ AFRAME.registerComponent('socscore', {
       var sceneEl = this.el.sceneEl;
       var messageEl = this.messageEl = document.createElement('div');
       var startOpened = this.data.startOpened;
+      var socButton = this.socButton = document.createElement('button');
       this.toggleInfoMessage = this.toggleInfoMessage.bind(this);
   
       messageEl.classList.add('a-soc-score-pop-up');
@@ -25,7 +26,7 @@ AFRAME.registerComponent('socscore', {
       sceneEl.appendChild(messageEl);
   
       this.messageEl.style.display = startOpened ? '' : 'none';
-      this.infoButton.style.display = startOpened ? 'none' : '';
+      this.socButton.style.display = startOpened ? 'none' : '';
     },
   
     update: function () {
@@ -59,7 +60,7 @@ AFRAME.registerComponent('socscore', {
         'border-radius: 5px; font-weight: medium}' +
   
 
-        '.a-soc-scores-container {position: absolute; top: 25px; left: 140px;}' +
+        '.a-soc-scores-container {position: absolute; top: 25px; left: 100px;}' +
         
         '.a-soc-score-button {background: rgba(0, 0, 0, 0); color: #00ccff; min-width: 58px; min-height: 34px; border-radius: 8px; border: 0px solid #4CAF50; font-size: 30px; padding: 10px; font-weight: bold;}'+
         '.a-soc-score-button:hover {color: #008fb3;}'+
@@ -91,23 +92,45 @@ AFRAME.registerComponent('socscore', {
     },
   
     createScoresButton: function (onClick) {
-      var infoButton;
+      var socButton;
       var wrapper;    
       // Create elements.
       wrapper = document.createElement('div');
       wrapper.classList.add('a-soc-scores-container');
-      this.infoButton = infoButton = document.createElement('button');
-      infoButton.className = 'a-soc-score-button';
-      infoButton.innerText = " 18"
-      infoButton.setAttribute('title', 'Social impact score');
+      this.socButton = socButton = document.createElement('button');
+      socButton.className = 'a-soc-score-button';
+      socButton.innerText = " 0"
+      socButton.setAttribute('title', 'Social impact score');
       // Insert elements.
-      wrapper.appendChild(infoButton);
-      infoButton.addEventListener('click', function (evt) {
+      wrapper.appendChild(socButton);
+      socButton.addEventListener('click', function (evt) {
         onClick();
         evt.stopPropagation();
       });
       this.el.sceneEl.appendChild(wrapper);
     },
-  
+
+    updateScore: function (id) {
+
+      var score = document.querySelector('.soc-score');
+      var workingCondition = document.querySelector('.workingCondition');
+      var animalTreatement = document.querySelector('.animalTreatement');
+
+
+      
+      var url = "https://serene-headland-54515.herokuapp.com/materials/"
+      fetch(url + id)
+        .then((resp) => resp.json())
+        .then(function(data) {
+          console.log(data);
+          this.socButton.innerHTML = " " + data.socialScore.total;
+          score.innerHTML = data.socialScore.total;
+          workingCondition.innerHTML = data.socialScore.workingCondition;
+          animalTreatement.innerHTML = data.socialScore.animalTreatement;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      },
   });
   

@@ -77,25 +77,14 @@ AFRAME.registerComponent('modelviewer', {
 
   initUploadInput: function () {
     
-    let changeMaterial = (part, value, texture) => {
+    let changeMaterial = (part, id, texture) => {
       
       var envscore = document.querySelector('[envscore]').components.envscore;
-      //console.log(envscore);
-      envscore.updateScore(part, value);
-
-      //Udate the material in the schema 
-      if (part == "Outside")
-        this.data.outsideMat = value;
-      if (part == "Inside")
-        this.data.insideMat = value;
-      if (part == "Ornements")
-        this.data.ornementsMat = value;
-      if (part == "Hance1")
-        this.data.handleMat = value;
+      var socscore = document.querySelector('[socscore]').components.socscore;
       
+      envscore.updateScore(id);
+      socscore.updateScore(id);
       
-
-
       this.modelEl.object3D.traverse(function(object3D){
         var target;
         
@@ -146,28 +135,40 @@ AFRAME.registerComponent('modelviewer', {
     var handle2 = this.handle2 = document.createElement('button');
     var handle3 = this.handle3 = document.createElement('button');
     
+    
+    var editButtonContainer = this.editButtonContainer = document.createElement('div');
+    var editButton = this.editButton = document.createElement('button');
+    var editContainer = this.editContainer = document.createElement('div');
+    var editTitle = this.editTitle = document.createElement('div');
+    var editCloseButton = this.editCloseButton = document.createElement('button');
+
+    var editOutsideContainer = this.editOutsideContainer = document.createElement('div');
+    var editOrnementsContainer = this.editOrnementsContainer = document.createElement('div'); 
+    var editHandleContainer = this.editHandleContainer = document.createElement('div');    
 
     var style = document.createElement('style');
     var css =
+      '@import url(https://kit.fontawesome.com/200bb4af22.js);' +
       '.a-score  {box-sizing: border-box; display: inline-block; height: 34px; margin: 20px; width: 100%;' +
       'position: absolute; color: white; background-color: red;' +
       'font-size: 12px; line-height: 12px; border: none;' +
       'border-radius: 5px}' +
-      '.a-upload-model  {box-sizing: border-box; display: inline-block; height: 34px; padding: 0; width: 70%;' +
-      'bottom: 20px; left: 15%; right: 15%; position: absolute; color: white;' +
+
+      '.a-upload-model  {box-sizing: border-box; height: 34px; padding: 0; width: 70%;' +
+      'top: 15%; bottom: 15%; right: 0; position: absolute; color: white;' +
       'font-size: 12px; line-height: 12px; border: none;' +
       'border-radius: 5px}' +
-      '.a-text-color-change {display: inline-block; font-size: x-large; margin-right: 10px;}' +
+      '.a-text-color-change {display: block; font-size: x-large; margin-right: 10px; padding-left: 30px; color: white;}' +
       '.a-upload-model.hidden {display: none}' +
-      '.a-button-outside-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 5px;}' +
-      '.a-button-outside-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 5px;}' +
-      '.a-button-outside-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 50px;}' +
-      '.a-button-ornements-gold {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/gold.jpg"); margin-right: 5px;}' +
-      '.a-button-ornements-metalgrey {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/metalGrey.jpg");  margin-right: 5px;}' +
-      '.a-button-ornements-metalblack {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 50px;}' +
-      '.a-button-handle-beige {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 5px;}' +
-      '.a-button-handle-black {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 5px;}' +
-      '.a-button-handle-brown {cursor: pointer; padding: 0px 2px 0 2px; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 50px;}' +
+      '.a-button-outside-beige {cursor: pointer; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 15px;}' +
+      '.a-button-outside-black {cursor: pointer;  font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 15px;}' +
+      '.a-button-outside-brown {cursor: pointer;  font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 15px;}' +
+      '.a-button-ornements-gold {cursor: pointer;  font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/gold.jpg"); margin-right: 15px;}' +
+      '.a-button-ornements-metalgrey {cursor: pointer;  font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Ornements/metalGrey.jpg");  margin-right: 15px;}' +
+      '.a-button-ornements-metalblack {cursor: pointer; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 15px;}' +
+      '.a-button-handle-beige {cursor: pointer; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/Texture_1_baseColor.jpeg"); margin-right: 15px;}' +
+      '.a-button-handle-black {cursor: pointer; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/full-black2.jpg");  margin-right: 15px;}' +
+      '.a-button-handle-brown {cursor: pointer; font-weight: bold; color: #666; border: 3px solid #666; box-sizing: border-box; vertical-align: middle; width: 40px; max-width: 110px; border-radius: 50%; height: 40px; background-image: url("images/Outside/camel4.jpg");  margin-right: 15px;}' +
       
       '.a-upload-model-button:hover {border-color: #ef2d5e; color: #ef2d5e}' +
       '.a-upload-model-input {color: #666; vertical-align: middle; padding: 0px 10px 0 10px; text-transform: uppercase; border: 0; width: 75%; height: 100%; border-radius: 10px; margin-right: 10px}' +
@@ -175,7 +176,25 @@ AFRAME.registerComponent('modelviewer', {
       '.a-upload-model {margin: auto;}' +
       '.a-upload-model-input {width: 70%;}}' +
       '@media only screen and (max-width: 700px) {' +
-      '.a-upload-model {display: none}}';
+      '.a-upload-model {display: none}}'+
+      
+      '.a-edit-button-container {position: absolute; top: 25px; right: 20px;}'+
+      //'.a-edit-container {position: absolute; top: 200px; right: 20px; width: fit-content; height: fit-content ; background-color: white;padding-top: 15px; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; }'+
+      '.a-edit-container {height: 100%; width: 0; position: fixed; z-index: 1; top: 0; right: 0; background-color: #111; overflow-x: hidden; transition: 0.5s; padding-top: 30px;}'+
+      //'.a-edit-container.hidden {display: none}'+
+      '.a-edit-container.hidden {width: 25%}'+
+      '@media only screen and (max-width: 700px) {' +
+      '.a-edit-container.hidden {width: 100%}}'+
+      '.a-edit-title {color: white; font-size: 30px; padding-left: 35px; padding-bottom: 60px; width: 100%}'+
+      '.a-edit-close-button {background: rgba(0, 0, 0, 0); color: white; min-width: 58px; min-height: 34px; border-radius: 8px; border: 0px solid #92d050; font-size: 30px; font-weight: bold; cusor: pointer; position: absolute; right: 15px; transition: 0.3s;}'+
+      '.a-edit-close-button:hover {color: #a1a1a1;}'+
+      '.a-edit-close-button:before { content: "\\f061"; display: inline-block; font: normal normal normal 14px/1 FontAwesome;  font-size: inherit;  text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }'+ 
+      
+      '.a-edit-button {background: #111; color: white; min-width: 58px; min-height: 34px; border-radius: 8px; border: 0px solid #92d050; font-size: 20px; padding: 10px; cusor: pointer;}'+
+      '.a-edit-button:hover {color: #a1a1a1;}'+
+      '.a-edit-button:before { content: "\\f044"; display: inline-block; font: normal normal normal 14px/1 FontAwesome;  font-size: inherit;  text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }'+
+
+      '.a-edit-part-container {display: inline-block; padding-top: 15px; padding-bottom: 30px; padding-left: 60px; padding-right: 15px; transition: 0.3s;}';
     var inputDefaultValue = this.inputDefaultValue = 'Copy URL to glTF or glb model';
 
     if (AFRAME.utils.device.checkARSupport()) {
@@ -197,7 +216,7 @@ AFRAME.registerComponent('modelviewer', {
 
     //Outside
     outside.classList.add('a-text-color-change');
-    outside.innerText = "Outside :";
+    outside.innerText = "Outside";
 
     outisdeBeige.classList.add('a-button-outside-beige');
     outisdeBeige.addEventListener('click', function() {changeMaterial("Outside", 1, "images/Outside/Texture_1_baseColor.jpeg");});
@@ -213,36 +232,70 @@ AFRAME.registerComponent('modelviewer', {
 
     //Ornements
     ornements.classList.add('a-text-color-change');
-    ornements.innerText = "Ornements :";
+    ornements.innerText = "Ornements";
 
     ornementsBeige.classList.add('a-button-ornements-gold');
-    ornementsBeige.addEventListener('click', function(){changeMaterial("Ornements", 1,"images/Ornements/gold.jpg");});
+    ornementsBeige.addEventListener('click', function(){changeMaterial("Ornements", 9,"images/Ornements/gold.jpg");});
     ornementsBeige.setAttribute('title', 'material4');
 
     ornementsBlack.classList.add('a-button-ornements-metalgrey');
-    ornementsBlack.addEventListener('click', function(){changeMaterial("Ornements", 2, "images/Ornements/metalGrey.jpg");});
+    ornementsBlack.addEventListener('click', function(){changeMaterial("Ornements", 10, "images/Ornements/metalGrey.jpg");});
     ornementsBlack.setAttribute('title', 'material5');
 
     ornementsBrown.classList.add('a-button-ornements-metalblack');
-    ornementsBrown.addEventListener('click', function(){changeMaterial("Ornements", 3, "images/Outside/full-black2.jpg");});
+    ornementsBrown.addEventListener('click', function(){changeMaterial("Ornements", 11, "images/Outside/full-black2.jpg");});
     ornementsBrown.setAttribute('title', 'material6');
 
     //Handle
     handle.classList.add('a-text-color-change');
-    handle.innerText = "Handle :";
+    handle.innerText = "Handle";
 
     handle1.classList.add('a-button-outside-beige');
-    handle1.addEventListener('click', function(){changeMaterial("Hance1", 1, "images/Outside/Texture_1_baseColor.jpeg");});
+    handle1.addEventListener('click', function(){changeMaterial("Hance1", 13, "images/Outside/Texture_1_baseColor.jpeg");});
     handle1.setAttribute('title', 'material1');
 
     handle2.classList.add('a-button-outside-black');
-    handle2.addEventListener('click', function(){changeMaterial("Hance1", 2, "images/Outside/full-black2.jpg");});
+    handle2.addEventListener('click', function(){changeMaterial("Hance1", 14, "images/Outside/full-black2.jpg");});
     handle2.setAttribute('title', 'material2');
 
     handle3.classList.add('a-button-outside-brown');
-    handle3.addEventListener('click', function(){changeMaterial("Hance1", 3, "images/Outside/camel4.jpg");});
+    handle3.addEventListener('click', function(){changeMaterial("Hance1", 15, "images/Outside/camel4.jpg");});
     handle3.setAttribute('title', 'material3');
 
+    editButtonContainer.classList.add('a-edit-button-container');
+    editContainer.classList.add('a-edit-container');
+    
+    editButton.classList.add('a-edit-button');
+    editButton.innerHTML = " Edit";
+    editButton.addEventListener('click', function () {
+      //console.log("hidden");
+      
+      if (editContainer.classList.contains('hidden')) {
+        editContainer.classList.remove('hidden');
+      }
+      else {
+        editContainer.classList.add('hidden');
+      }
+    });
+
+    editTitle.classList.add('a-edit-title');
+    editTitle.innerText = "Edit";
+
+    editCloseButton.classList.add('a-edit-close-button');
+    editCloseButton.addEventListener('click', function () {
+      //console.log("hidden");
+      
+      if (editContainer.classList.contains('hidden')) {
+        editContainer.classList.remove('hidden');
+      }
+      else {
+        editContainer.classList.add('hidden');
+      }
+    });
+
+    editOutsideContainer.classList.add('a-edit-part-container'); 
+    editOrnementsContainer.classList.add('a-edit-part-container');
+    editHandleContainer.classList.add('a-edit-part-container');
 
     this.el.sceneEl.addEventListener('infomessageopened', function () {
       uploadContainerEl.classList.add('hidden');
@@ -254,23 +307,34 @@ AFRAME.registerComponent('modelviewer', {
     //inputEl.value = inputDefaultValue;
 
     //uploadContainerEl.appendChild(inputEl);
-    uploadContainerEl.appendChild(outside);
-    uploadContainerEl.appendChild(outisdeBeige);
-    uploadContainerEl.appendChild(outisdeBlack);
-    uploadContainerEl.appendChild(outisdeBrown);
-    uploadContainerEl.appendChild(ornements);
-    uploadContainerEl.appendChild(ornementsBeige);
-    uploadContainerEl.appendChild(ornementsBlack);
-    uploadContainerEl.appendChild(ornementsBrown);
-    uploadContainerEl.appendChild(handle);
-    uploadContainerEl.appendChild(handle1);
-    uploadContainerEl.appendChild(handle2);
-    uploadContainerEl.appendChild(handle3);
-    //uploadContainerEl.appendChild(changeSphere);
-    //uploadContainerEl.appendChild(changeCone);
+    editButtonContainer.appendChild(editButton);
+    
+    editContainer.appendChild(editTitle);
+    editTitle.appendChild(editCloseButton);
+
+    editContainer.appendChild(outside);
+    editOutsideContainer.appendChild(outisdeBeige);
+    editOutsideContainer.appendChild(outisdeBlack);
+    editOutsideContainer.appendChild(outisdeBrown);  
+    editContainer.appendChild(editOutsideContainer);
+
+    editContainer.appendChild(ornements);
+    editOrnementsContainer.appendChild(ornementsBeige);
+    editOrnementsContainer.appendChild(ornementsBlack);
+    editOrnementsContainer.appendChild(ornementsBrown);
+    editContainer.appendChild(editOrnementsContainer);
+
+    editContainer.appendChild(handle);
+    editHandleContainer.appendChild(handle1);
+    editHandleContainer.appendChild(handle2);
+    editHandleContainer.appendChild(handle3);
+    editContainer.appendChild(editHandleContainer);
 
     //this.el.sceneEl.appendChild(scoreContainer);
     this.el.sceneEl.appendChild(uploadContainerEl);
+    this.el.sceneEl.appendChild(editButtonContainer);
+    this.el.sceneEl.appendChild(editContainer);
+    
   },
 
   update: function () {
