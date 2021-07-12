@@ -43,7 +43,7 @@ AFRAME.registerComponent('envscore', {
 
        '@import url(https://kit.fontawesome.com/200bb4af22.js);' +
         '.a-score-pop-up{border-radius: 25px; position: absolute; width: 400px;' +
-        'height: 600px; background-color: white; border: 0px solid rgba(0,0,0,.75);' +
+        'height: 600px; background: rgba(255,255,255,1); border: 0px solid rgba(0,0,0,.75);' +
         'top: 100px; left: 50px; color: rgb(51, 51, 51); padding: 20px 15px 0 15px;' +
         'font-size: 11pt; line-height: 20pt;}' +
   

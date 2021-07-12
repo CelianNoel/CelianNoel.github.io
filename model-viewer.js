@@ -180,7 +180,7 @@ AFRAME.registerComponent('modelviewer', {
       
       '.a-edit-button-container {position: absolute; top: 25px; right: 20px;}'+
       //'.a-edit-container {position: absolute; top: 200px; right: 20px; width: fit-content; height: fit-content ; background-color: white;padding-top: 15px; padding-bottom: 15px; padding-left: 15px; padding-right: 15px; }'+
-      '.a-edit-container {height: 100%; width: 0; position: fixed; z-index: 1; top: 0; right: 0; background-color: #111; overflow-x: hidden; transition: 0.5s; padding-top: 30px;}'+
+      '.a-edit-container {height: 100%; width: 0; position: fixed; z-index: 1; top: 0; right: 0; background: rgb(17, 17, 17,0.8); overflow-x: hidden; transition: 0.5s; padding-top: 30px;}'+
       //'.a-edit-container.hidden {display: none}'+
       '.a-edit-container.hidden {width: 25%}'+
       '@media only screen and (max-width: 700px) {' +
@@ -192,6 +192,7 @@ AFRAME.registerComponent('modelviewer', {
       
       '.a-edit-button {background: #111; color: white; min-width: 58px; min-height: 34px; border-radius: 8px; border: 0px solid #92d050; font-size: 20px; padding: 10px; cusor: pointer;}'+
       '.a-edit-button:hover {color: #a1a1a1;}'+
+      '.a-edit-button.hidden {display: none;}'+
       '.a-edit-button:before { content: "\\f044"; display: inline-block; font: normal normal normal 14px/1 FontAwesome;  font-size: inherit;  text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }'+
 
       '.a-edit-part-container {display: inline-block; padding-top: 15px; padding-bottom: 30px; padding-left: 60px; padding-right: 15px; transition: 0.3s;}';
@@ -266,20 +267,22 @@ AFRAME.registerComponent('modelviewer', {
     editContainer.classList.add('a-edit-container');
     
     editButton.classList.add('a-edit-button');
-    editButton.innerHTML = " Edit";
+    editButton.innerHTML = " Customize";
     editButton.addEventListener('click', function () {
       //console.log("hidden");
       
       if (editContainer.classList.contains('hidden')) {
         editContainer.classList.remove('hidden');
+        editButton.classList.remove('hidden');
       }
       else {
         editContainer.classList.add('hidden');
+        editButton.classList.add('hidden');
       }
     });
 
     editTitle.classList.add('a-edit-title');
-    editTitle.innerText = "Edit";
+    editTitle.innerText = "Customize";
 
     editCloseButton.classList.add('a-edit-close-button');
     editCloseButton.addEventListener('click', function () {
@@ -287,9 +290,11 @@ AFRAME.registerComponent('modelviewer', {
       
       if (editContainer.classList.contains('hidden')) {
         editContainer.classList.remove('hidden');
+        editButton.classList.remove('hidden');
       }
       else {
         editContainer.classList.add('hidden');
+        editButton.classList.add('hidden');
       }
     });
 
