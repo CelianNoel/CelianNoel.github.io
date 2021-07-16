@@ -30,15 +30,21 @@
     padding-top: 50px;
 }
 
-.env-score {
+.env-score-1 {
     color: #92d050;
     font-size: 50px; 
     font-weight: 600;
     padding-top: 50px;
 }
+.env-score-2 {
+    color: #92d050;
+    font-size: 25px;
+    padding-top: 15px;
+}
 
 .score-details {
-    padding-top: 50px;
+    position: relative;
+    top: -140px;
 }
 
 .logo {
@@ -60,9 +66,73 @@ td {
     padding-top: 50px;
 }
 
-.soc-score {
+.soc-score-1 {
     color: #00ccff;
     font-size: 50px; 
     font-weight: 600;
     padding-top: 50px;
+}
+
+.soc-score-2{
+    color: #00ccff;
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.env-score{
+    position: relative;
+    top: -190px;
+}
+
+.progress-ring {
+  
+}
+
+.progress-ring__circle {
+  transition: 0.35s stroke-dashoffset;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring__soccircle {
+    transition: 0.35s stroke-dashoffset;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+.detailsButton {
+    position: relative;
+    top: -110px;
+    background-color: #111;
+    color: white;
+    border-radius: 90px;
+    border: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.detailsButton:hover {
+    cursor: pointer;
+}
+
+.detailsSocialButton {
+    position: relative;
+    bottom: 0px;
+    background-color: #111;
+    color: white;
+    border-radius: 90px;
+    border: none;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.detailsSocialButton:hover {
+    cursor: pointer;
+}
+
+.E-value {
+    display: "none";
 }

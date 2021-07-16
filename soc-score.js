@@ -27,12 +27,18 @@ AFRAME.registerComponent('socscore', {
   
       this.messageEl.style.display = startOpened ? '' : 'none';
       this.socButton.style.display = startOpened ? 'none' : '';
+
+      var loadValue = true;
     },
   
     update: function () {
       var messageEl = this.messageEl;
       messageEl.innerHTML = this.data.htmlSrc.data;
       messageEl.appendChild(this.closeButtonEl);
+
+      var detailsButton = document.querySelector('.detailsSocialButton');
+      detailsButton.addEventListener('click', this.getDataDetails);
+ 
     },
   
     addStyles: function () {
@@ -112,25 +118,84 @@ AFRAME.registerComponent('socscore', {
 
     updateScore: function (id) {
 
-      var score = document.querySelector('.soc-score');
-      var workingCondition = document.querySelector('.workingCondition');
-      var animalTreatement = document.querySelector('.animalTreatement');
-
+      var score = document.querySelector('.soc-score-1');
+      var workingCondition = document.querySelector('.workingConditionScore');
+      var animalTreatement = document.querySelector('.animalTreatementScore');
+      var socButton = document.querySelector('.a-soc-score-button');
 
       
+      var circle = document.querySelector('.progress-ring__soccircle');
+      var radius = circle.r.baseVal.value;
+      var circumference = radius * 2 * Math.PI;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = `${circumference}`;
+
       var url = "https://serene-headland-54515.herokuapp.com/materials/"
       fetch(url + id)
         .then((resp) => resp.json())
         .then(function(data) {
-          console.log(data);
-          this.socButton.innerHTML = " " + data.socialScore.total;
+          
+          socButton.innerHTML = " " + data.socialScore.total;
           score.innerHTML = data.socialScore.total;
-          workingCondition.innerHTML = data.socialScore.workingCondition;
-          animalTreatement.innerHTML = data.socialScore.animalTreatement;
+          workingCondition.innerHTML = data.socialScore.workingCondition + " /100";
+          animalTreatement.innerHTML = data.socialScore.animalTreatement + " /100";
+          
+          const offset = circumference - data.socialScore.total / 100 * circumference;
+          circle.style.strokeDashoffset = offset;
         })
         .catch(function(error) {
           console.log(error);
         });
       },
+
+      getDataDetails: function(){
+      
+        var detailsButton = document.querySelector('.detailsSocialButton');
+  
+        var values = document.querySelectorAll('.S-value');
+        var scores = document.querySelectorAll('.S-score');
+
+        
+       
+        if (values && values[0].style.display == "none") {
+          values.forEach(element => {
+            element.style.display = "";
+            detailsButton.innerText = "Hide details";
+          });
+          scores.forEach(element => {
+            element.style.display = "none";
+            detailsButton.innerText = "Show details";
+          });
+        }
+        else {
+          values.forEach(element => {
+            element.style.display = "none";
+          });
+          scores.forEach(element => {
+            element.style.display = "";
+          });
+        }
+      
+  
+        var workingCondition = document.querySelector('.workingConditionValue');
+        var animalTreatement = document.querySelector('.animalTreatementValue');
+
+  
+        var url = "https://serene-headland-54515.herokuapp.com/materials/"
+        fetch(url)
+          .then((resp) => resp.json())
+          .then(function(data) {
+            var workingConditionValue = data.material.outside.workingConditionValue + data.material.inside.workingConditionValue + data.material.ornements.workingConditionValue + data.material.handle.workingConditionValue;
+            var animalTreatementValue = data.material.outside.animalTreatementValue + data.material.inside.animalTreatementValue + data.material.ornements.animalTreatementValue + data.material.handle.animalTreatementValue;
+  
+            workingCondition.innerHTML = workingConditionValue;
+            animalTreatement.innerHTML = animalTreatementValue;
+            
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }, 
   });
   

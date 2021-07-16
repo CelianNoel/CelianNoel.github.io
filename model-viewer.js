@@ -73,6 +73,7 @@ AFRAME.registerComponent('modelviewer', {
     this.el.sceneEl.addEventListener('exit-vr', this.onExitVR);
 
     this.modelEl.addEventListener('model-loaded', this.onModelLoaded);
+
   },
 
   initUploadInput: function () {
@@ -110,6 +111,10 @@ AFRAME.registerComponent('modelviewer', {
       
       })
     }
+
+    changeMaterial("Outside", 1, "images/Outside/Texture_1_baseColor.jpeg");
+    changeMaterial("Ornements", 9,"images/Ornements/gold.jpg");
+    changeMaterial("Hance1", 13, "images/Outside/Texture_1_baseColor.jpeg");
     
     var scoreContainer = this.scoreContainer = document.createElement('div');
     scoreContainer.setAttribute('aframe-injected', '');

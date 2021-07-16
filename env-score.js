@@ -13,6 +13,7 @@ AFRAME.registerComponent('envscore', {
       var infoButton = this.infoButton = document.createElement('button');
 
       this.toggleInfoMessage = this.toggleInfoMessage.bind(this);
+      this.getDataDetails = this.getDataDetails.bind(this);
   
       messageEl.classList.add('a-score-pop-up');
       messageEl.setAttribute('aframe-injected', '');
@@ -29,12 +30,17 @@ AFRAME.registerComponent('envscore', {
   
       this.messageEl.style.display = startOpened ? '' : 'none';
       this.infoButton.style.display = startOpened ? 'none' : '';
+
+      
     },
   
     update: function () {
       var messageEl = this.messageEl;
       messageEl.innerHTML = this.data.htmlSrc.data;
       messageEl.appendChild(this.closeButtonEl);
+      
+      var detailsButton = document.querySelector('.detailsButton');
+      detailsButton.addEventListener('click', this.getDataDetails);
     },
   
     addStyles: function () {
@@ -43,7 +49,7 @@ AFRAME.registerComponent('envscore', {
 
        '@import url(https://kit.fontawesome.com/200bb4af22.js);' +
         '.a-score-pop-up{border-radius: 25px; position: absolute; width: 400px;' +
-        'height: 600px; background: rgba(255,255,255,1); border: 0px solid rgba(0,0,0,.75);' +
+        'height: 625px; background: rgba(255,255,255,1); border: 0px solid rgba(0,0,0,.75);' +
         'top: 100px; left: 50px; color: rgb(51, 51, 51); padding: 20px 15px 0 15px;' +
         'font-size: 11pt; line-height: 20pt;}' +
   
@@ -124,7 +130,7 @@ AFRAME.registerComponent('envscore', {
 
     updateScore: function (id) {
 
-      var score = document.querySelector('.env-score');
+      var score = document.querySelector('.env-score-1');
       var airPollution = document.querySelector('.airPollution');
       var ghg = document.querySelector('.ghg');
       var landUse = document.querySelector('.landUse');
@@ -132,33 +138,89 @@ AFRAME.registerComponent('envscore', {
       var waterConsumption = document.querySelector('.waterConsumption');
       var waterPollution = document.querySelector('.waterPollution');
 
+      var circle = document.querySelector('circle');
+      var radius = circle.r.baseVal.value;
+      var circumference = radius * 2 * Math.PI;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = `${circumference}`;
       
       var url = "https://serene-headland-54515.herokuapp.com/materials/"
       fetch(url + id)
         .then((resp) => resp.json())
         .then(function(data) {
-          console.log(data);
           this.infoButton.innerHTML = " " + data.environmentScore.total;
           score.innerHTML = data.environmentScore.total;
-          airPollution.innerHTML = data.environmentScore.airPollution;
-          ghg.innerHTML = data.environmentScore.ghg;
-          landUse.innerHTML = data.environmentScore.landUse;
-          waste.innerHTML = data.environmentScore.waste;
-          waterConsumption.innerHTML = data.environmentScore.waterConsumption;
-          waterPollution.innerHTML = data.environmentScore.waterPollution;
+          airPollution.innerHTML = data.environmentScore.airPollution + " /100";
+          ghg.innerHTML = data.environmentScore.ghg + " /100";
+          landUse.innerHTML = data.environmentScore.landUse + " /100";
+          waste.innerHTML = data.environmentScore.waste + " /100";
+          waterConsumption.innerHTML = data.environmentScore.waterConsumption + " /100";
+          waterPollution.innerHTML = data.environmentScore.waterPollution + " /100";
+
+          const offset = circumference - data.environmentScore.total / 100 * circumference;
+          circle.style.strokeDashoffset = offset;
         })
         .catch(function(error) {
           console.log(error);
         });
-
-       /* const Http = new XMLHttpRequest();
-        var url='http://localhost:8080/materials/' + id;
-        Http.open("GET", url);
-        Http.send();
-
-        Http.onreadystatechange = (e) => {
-          var res = Http.responseText;
-        }*/
     },
+
+    getDataDetails: function(){
+      
+      var detailsButton = document.querySelector('.detailsButton');
+
+      var values = document.querySelectorAll('.E-value');
+      var scores = document.querySelectorAll('.E-score');
+     
+      if (values && values[0].style.display == "none") {
+        values.forEach(element => {
+          element.style.display = "";
+          detailsButton.innerText = "Hide details";
+        });
+        scores.forEach(element => {
+          element.style.display = "none";
+          detailsButton.innerText = "Show details";
+        });
+      }
+      else {
+        values.forEach(element => {
+          element.style.display = "none";
+        });
+        scores.forEach(element => {
+          element.style.display = "";
+        });
+      }
+    
+
+      var airPollution = document.querySelector('.airPollutionValue');
+      var ghg = document.querySelector('.ghgValue');
+      var landUse = document.querySelector('.landUseValue');
+      var waste = document.querySelector('.wasteValue');
+      var waterConsumption = document.querySelector('.waterConsumptionValue');
+      var waterPollution = document.querySelector('.waterPollutionValue');
+
+      var url = "https://serene-headland-54515.herokuapp.com/materials/"
+      fetch(url)
+        .then((resp) => resp.json())
+        .then(function(data) {
+          var airPollutionValue = data.material.outside.airPollutionValue + data.material.inside.airPollutionValue + data.material.ornements.airPollutionValue + data.material.handle.airPollutionValue;
+          var ghgValue = data.material.outside.ghgValue + data.material.inside.ghgValue + data.material.ornements.ghgValue + data.material.handle.ghgValue;
+          var landUseValue = data.material.outside.landUseValue + data.material.inside.landUseValue + data.material.ornements.landUseValue + data.material.handle.landUseValue;
+          var wasteValue = data.material.outside.wasteValue + data.material.inside.wasteValue + data.material.ornements.wasteValue + data.material.handle.wasteValue;
+          var waterConsumptionValue = data.material.outside.waterConsumptionValue + data.material.inside.waterConsumptionValue + data.material.ornements.waterConsumptionValue + data.material.handle.waterConsumptionValue;
+          var waterPollutionValue = data.material.outside.waterPollutionValue + data.material.inside.waterPollutionValue + data.material.ornements.waterPollutionValue + data.material.handle.waterPollutionValue;
+
+          airPollution.innerHTML = airPollutionValue + " Kg of Co2";
+          ghg.innerHTML = ghgValue + " Kg";
+          landUse.innerHTML = landUseValue + " Km2";
+          waste.innerHTML = wasteValue + " Kg";
+          waterConsumption.innerHTML = waterConsumptionValue + " m3";
+          waterPollution.innerHTML = waterPollutionValue + " m3";
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }, 
   });
   
