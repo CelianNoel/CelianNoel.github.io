@@ -139,8 +139,8 @@ td {
 
 @media only screen and (max-height: 600px) {
     .env-score-title {font-size: 25px; font-weight: 250; padding-top: 15px;}
-    .env-score-1 {font-size: 30px;font-weight: 400;}
-    .env-score-2 {font-size: 15px;font-weight: 200;}
+    .env-score-1 {font-size: 40px;font-weight: 400;}
+    .env-score-2 {font-size: 20px;font-weight: 200;}
 
     .progress-ring {
         display: none;
@@ -155,6 +155,52 @@ td {
     .env-score-1
     {
         position: relative;
+        top: 0px;
+    }
+    .env-score-2
+    {
+        position: relative;
+        top: -10px;
+    } 
+    .detailsButton {
+        position: relative;
+        top: -10px;
+    }
+    .score-details {
+        position: relative;
+        top: -20px;
+    }
+
+    .soc-score-title {font-size: 25px; font-weight: 250; padding-top: 15px;}
+    .soc-score-1 {font-size: 40px;font-weight: 400;}
+    .soc-score-2 {font-size: 20px;font-weight: 200;}
+
+    .progress-ring {
+        display: none;
+    }
+    .progress-ring__soccircle {
+        display: none;
+    }
+    .soc-score{
+        position: relative;
         top: -25px;
+    }
+    .soc-score-1
+    {
+        position: relative;
+        top: 0px;
+    }
+    .soc-score-2
+    {
+        position: relative;
+        top: -10px;
+    } 
+    .detailsSocialButton {
+        position: relative;
+        top: -10px;
+    }
+    .score-details {
+        position: relative;
+        top: -20px;
     }
 } 
