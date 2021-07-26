@@ -136,3 +136,25 @@ td {
 .E-value {
     display: "none";
 }
+
+@media only screen and (max-height: 600px) {
+    .env-score-title {font-size: 25px; font-weight: 250; padding-top: 15px;}
+    .env-score-1 {font-size: 30px;font-weight: 400;}
+    .env-score-2 {font-size: 15px;font-weight: 200;}
+
+    .progress-ring {
+        display: none;
+    }
+    .progress-ring__circle {
+        display: none;
+    }
+    .env-score{
+        position: relative;
+        top: -25px;
+    }
+    .env-score-1
+    {
+        position: relative;
+        top: -25px;
+    }
+} 

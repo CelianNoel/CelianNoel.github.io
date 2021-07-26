@@ -63,7 +63,9 @@ AFRAME.registerComponent('envscore', {
         '.a-score-pop-up {left: 20px; right: 20px; bottom: 60px; width: auto}}' +
           
         '@media only screen and (max-height: 600px) {' +
-        '.a-score-pop-up {left: 20px; bottom: 20px; height: 250px}}' +
+        '.a-score-pop-up {left: 20px; bottom: 20px; height: 450px}'+
+        '}' +
+
   
         '.a-close-button-info{width: 25px; height: 25px; padding: 0;' +
         'top: 15px; right: 15px; position: absolute; color: #404040; background-color: white;'  +
